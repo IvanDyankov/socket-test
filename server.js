@@ -1,5 +1,6 @@
 const Express = require('express');
 const app = new Express ();
+const flash = require('express-flash');
 const http = require('http')
 const server = new http.Server(app);
 const io = require('socket.io')(server);
@@ -37,7 +38,8 @@ app.set('view engine', 'ejs');
 
 /* middleware */
 app.use('/public', Express.static('ui'));
-if (app.get('env') === 'production') sess.cookie.secure = true;
+// TODO auth0 calls the callback on HTTP so the secure cookie cannot be retrieved.
+// if (app.get('env') === 'production') sess.cookie.secure = true;
 
 app.use(session(sess));
 passport.use(strategy);
@@ -49,7 +51,7 @@ passport.deserializeUser(function(user, done) {
 });
 app.use(passport.initialize());
 app.use(passport.session());
-
+app.use(flash());
 /* routes */
 app.get('/callback',
   passport.authenticate('auth0', { failureRedirect: '/login' }),
@@ -59,7 +61,7 @@ app.get('/callback',
   }
 );
 
-app.get('/login', passport.authenticate('auth0', {scope: 'openid profile'}), function (req, res) {
+app.get('/login', passport.authenticate('auth0', { scope: 'openid profile' }), function (req, res) {
   res.redirect('/');
 });
 
@@ -97,6 +99,6 @@ io.on('connection', function(socket) {
   });
 });
 
-server.listen(3000, function(){
-  console.log('listening on *:3000');
+server.listen(process.env.PORT || 3000, function() {
+  console.log('listening on *:', process.env.PORT || 3000);
 });
