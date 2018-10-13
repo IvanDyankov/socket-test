@@ -16,5 +16,9 @@
     "passport": "^0.4.0",
     "passport-auth0": "^1.0.0",
     "socket.io": "^2.1.1"
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/IvanDyankov/socket-test.git"
   }
 }

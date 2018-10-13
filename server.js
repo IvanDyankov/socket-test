@@ -10,23 +10,16 @@ const Auth0Strategy = require('passport-auth0');
 const passport = require('passport');
 const ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 
-app.set('views', './ui');
-app.set('view engine', 'ejs');
-/* middleware */
-app.use('/public', Express.static('ui'));
 const sess = {
   secret: 'chatApp',
   cookie: {},
   resave: false,
   saveUninitialized: true
 };
-if (app.get('env') === 'production') {
-  sess.cookie.secure = true; // serve secure cookies, requires https
-}
-app.use(session(sess));
+
 const strategy = new Auth0Strategy({
-  domain: 'pbx-test-sls.eu.auth0.com',
-  clientID: 'izMmSicNhq00V0oFXsbZcAQSKYlZKj0W',
+  domain: process.env.CHAT_CLIENT_DOMAIN,
+  clientID: process.env.CHAT_CLIENT_ID,
   clientSecret: process.env.CHAT_CLIENT_SECRET,
   callbackURL: '/callback',
   state: true
@@ -38,11 +31,19 @@ const strategy = new Auth0Strategy({
    return done(null, profile);
  }
 );
+
+app.set('views', './ui');
+app.set('view engine', 'ejs');
+
+/* middleware */
+app.use('/public', Express.static('ui'));
+if (app.get('env') === 'production') sess.cookie.secure = true;
+
+app.use(session(sess));
 passport.use(strategy);
 passport.serializeUser(function(user, done) {
   done(null, user);
 });
-
 passport.deserializeUser(function(user, done) {
   done(null, user);
 });
@@ -60,6 +61,10 @@ app.get('/callback',
 
 app.get('/login', passport.authenticate('auth0', {scope: 'openid profile'}), function (req, res) {
   res.redirect('/');
+});
+
+app.get('/logout', (req, res) => {
+  req.logout();
 });
 
 app.get('/', ensureLoggedIn('/login'), function(req, res) {
