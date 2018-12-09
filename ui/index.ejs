@@ -5,15 +5,15 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Easy Chat</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" media="screen" href="/public/css/main.css" />
-  <!-- <script src="main.js"></script> -->
+  <!-- <link rel="stylesheet" type="text/css" media="screen" href="/public/css/main.css" /> -->
   <script>
     var userName = "<%= displayName%>";
+    window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
   </script>
 </head>
 <body>
-  <div class="container">
-    <div class="left">
+  <div id="main" class="container">
+    <!-- <div class="left">
       <p>Now online:</p>
       <ul id="users"></ul>
     </div>
@@ -23,10 +23,10 @@
         <input id="m" autocomplete="off" />
         <button type="submit">Send</button>
       </form>
-    </div>
+    </div> -->
   </div>
 
-  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <!-- <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script>
     $(function () {
@@ -79,6 +79,7 @@
       });
 
     });
-  </script>
+  </script> -->
+  <script src="scripts/app.js"></script>
 </body>
 </html>

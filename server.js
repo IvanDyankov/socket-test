@@ -38,6 +38,7 @@ app.set('view engine', 'ejs');
 
 /* middleware */
 app.use('/public', Express.static('ui'));
+app.use('/scripts', Express.static('lib'));
 // TODO auth0 calls the callback on HTTP so the secure cookie cannot be retrieved.
 // if (app.get('env') === 'production') sess.cookie.secure = true;
 
@@ -69,11 +70,18 @@ app.get('/logout', (req, res) => {
   req.logout();
 });
 
-app.get('/', ensureLoggedIn('/login'), function(req, res) {
+// app.get('/', ensureLoggedIn('/login'), function(req, res) {
+//   res.render('index', {
+//     displayName: req.user.displayName
+//   });
+// });
+
+app.get('/', function(req, res) {
   res.render('index', {
-    displayName: req.user.displayName
+    displayName: 'Ivan'
   });
 });
+
 
 /* socket IO handlers */
 const onlineUsers = {};

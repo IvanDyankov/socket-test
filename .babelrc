@@ -1,0 +1,12 @@
+{
+  "ignore": [
+  "*.scss",
+  "/node_modules/"
+  ],
+  "presets": [
+    "env",
+    "react",
+    "stage-2"
+  ],
+  "plugins": ["transform-object-rest-spread"]
+}
