@@ -3,14 +3,23 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 
-class MainChat extends React.Component {
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = () => ({
+  vertical: {
+    alignItems: 'center'
+  }
+});
+
+class MessagePanel extends React.Component {
 
   render() {
+    const { classes } = this.props;
     return (
-      <Grid container justify="center" direction="row">
-        <Grid item xs="9">
+      <Grid container direction="row" className={classes.vertical}>
+        <Grid item xs={9}>
           <TextField
-            style={{ marginRight: 8 }}
+            autoFocus
             placeholder="Write a Message"
             margin="normal"
             fullWidth
@@ -20,12 +29,12 @@ class MainChat extends React.Component {
             }}
           />
         </Grid>
-        <Grid item xs="3">
-          <Button variant="outlined" color="primary">Send</Button>
+        <Grid item xs={2} >
+          <Button color="primary" size="large" fullWidth variant="outlined">Send</Button>
         </Grid>
       </Grid>
     );
   }
 };
 
-export default MainChat;
+export default withStyles(styles)(MessagePanel);

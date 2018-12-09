@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
   root: {
-    backgroundColor: 'lightgrey'
+    backgroundColor: 'white'
   }
 });
 
@@ -17,11 +17,11 @@ class Layout extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <Grid container className={classes.main} justify="center" direction="row">
-          <Grid item xs="3" >
+        <Grid container className={classes.main} justify="space-around" direction="row">
+          <Grid item xs={2} >
             <NowOnline />
           </Grid>
-          <Grid item xs="9">
+          <Grid item xs={9}>
             <Grid container direction="column">
               <MainChat />
               <MessagePanel />
