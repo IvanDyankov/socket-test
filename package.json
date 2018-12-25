@@ -4,7 +4,10 @@
   "description": "Socket I/O playground",
   "main": "server.js",
   "scripts": {
+    "build": "cross-env NODE_ENV=production webpack --config webpack.config.js --watch --mode production",
     "dev": "cross-env NODE_ENV=development webpack --config webpack.config.js --watch --mode development",
+    "start": "npm run build && node server.js",
+    "start:dev": "npm run dev && node server.js",
     "test": "jest"
   },
   "author": "Ivan Dyankov",

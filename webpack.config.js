@@ -25,12 +25,5 @@ module.exports = {
   },
   node: {
     fs: 'empty'
-  },
-  // plugins: [
-  //   new HtmlWebpackPlugin({
-  //     template: path.resolve(__dirname, './src/ui/index.html'),
-  //     inlineSource: '.(js|jsx|css)$'
-  //   }),
-  //   new HtmlWebpackInlineSourcePlugin()
-  // ]
+  }
 };
