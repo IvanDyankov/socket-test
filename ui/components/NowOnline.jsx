@@ -3,13 +3,6 @@ import Avatar from '@material-ui/core/Avatar';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Typography from '@material-ui/core/Typography';
-import { withStyles } from '@material-ui/core/styles';
-
-const styles = theme => ({
-  nowOnline: {
-    height:'100%'
-  }
-});
 
 class NowOnline extends React.Component {
   render() {
@@ -33,4 +26,4 @@ class NowOnline extends React.Component {
   }
 };
 
-export default withStyles(styles)(NowOnline);
+export default NowOnline;

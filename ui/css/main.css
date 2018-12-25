@@ -4,11 +4,13 @@
 }
 html, body {
   height: 100%;
-  margin: 0;
-  font: 13px Helvetica, Arial;
+  /* margin: 0; */
+  /* font: 13px Helvetica, Arial; */
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
-.container {
+/* .container {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -63,4 +65,4 @@ ul li {
 
 #messages li:nth-child(odd) {
   background: #eee;
-}
+} */
