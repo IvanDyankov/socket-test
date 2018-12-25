@@ -29,7 +29,7 @@ const MainChat = ({ classes }) =>
               align="left"
               className={classes.textMessage}
             >
-              {message}
+              {`${message.displayName}: ${message.text}`}
             </Typography>
           )
         }
