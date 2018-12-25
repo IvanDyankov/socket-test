@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack --config webpack.config.js --watch --mode production",
     "dev": "webpack --config webpack.config.js --watch --mode development",
-    "postinstall": "npm run build",
+    "heroku-postbuild": "npm run build",
     "test": "jest"
   },
   "author": "Ivan Dyankov",
