@@ -6,79 +6,16 @@
   <title>Easy Chat</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" media="screen" href="/public/css/main.css" />
-  <!-- <script src="main.js"></script> -->
   <script>
-    var userName = "<%= displayName%>";
+    var user = {
+      displayName: "<%= displayName%>",
+      picture: "<%= picture%>"
+    };
   </script>
 </head>
 <body>
-  <div class="container">
-    <div class="left">
-      <p>Now online:</p>
-      <ul id="users"></ul>
-    </div>
-    <div class="right">
-      <ul id="messages"></ul>
-      <form action="">
-        <input id="m" autocomplete="off" />
-        <button type="submit">Send</button>
-      </form>
-    </div>
-  </div>
-
-  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <div id="main" class="container"> </div>
   <script src="/socket.io/socket.io.js"></script>
-  <script>
-    $(function () {
-      var socket = io();
-      var chatForm = $('form');
-      var chatBox = $('#m');
-      var messagesPanel = $('#messages');
-      var usersPanel = $('#users');
-      var connected = false;
-
-      if (!connected) {
-        socket.emit('newClient', userName);
-        connected = true;
-      }
-
-      chatForm.submit(function() {
-        var userMessage = chatBox.val();
-        if (userMessage === '/bye') {
-          socket.emit('clientBye', userName);
-          socket.disconnect();
-          connected = false;
-        }
-        socket.emit('chatMessage', { userName: userName, text: userMessage });
-        if (connected) {
-          messagesPanel.append($('<li>').text(userName + ': ' + userMessage));
-        }
-        chatBox.val('');
-        messagesPanel.animate({scrollTop: messagesPanel.prop("scrollHeight")},100);
-        return false;
-      });
-
-      socket.on('addClient', function(data) {
-        usersPanel.append($('<li id="' + data.clientId + '">').text(data.name));
-        messagesPanel.append($('<li>').text('SYSTEM: ' + data.name + ' just joined'));
-      });
-
-      socket.on('echoChatMessage', function(message) {
-        messagesPanel.append($('<li>').text(message.userName + ': ' + message.text));
-      });
-
-      socket.on('clientBye', function(data) {
-        messagesPanel.append($('<li>').text('SYSTEM: ' + data.name + 'left the chat'));
-        $('#' + data.clientId).remove();
-      });
-
-      socket.on('onlineList', function(data) {
-        $.each(JSON.parse(data), function(idx, value) {
-          usersPanel.append($('<li id="' + idx + '">').text(value));
-        });
-      });
-
-    });
-  </script>
+  <script src="scripts/app.js"></script>
 </body>
 </html>

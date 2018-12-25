@@ -4,63 +4,6 @@
 }
 html, body {
   height: 100%;
-  margin: 0;
-  font: 13px Helvetica, Arial;
-}
-
-.container {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: stretch;
-  width: 100%;
-  min-height: 100%;
-}
-
-.left {
-  min-width: 150px;
-}
-
-.right {
-  min-width: 500px;
-  width: 100%;
-  align-self: flex-end;
-}
-
-form {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  background: #000;
-  padding: 3px;
-  width: 100%;
-}
-
-form input {
-  border: 0;
-  padding: 10px;
-  margin-right: 0.5%;
-  width: 100%;
-}
-
-form button {
-  background: rgb(130, 224, 255);
-  border: none;
-  padding: 10px;
-  width: 9%;
-  min-width: 50px;
-}
-
-ul {
-  max-height: 93vh;
-  overflow-y: scroll;
-  list-style-type: none;
-}
-
-ul li {
-  padding: 5px 10px;
-}
-
-#messages li:nth-child(odd) {
-  background: #eee;
+  overflow-x: hidden;
+  overflow-y: auto;
 }

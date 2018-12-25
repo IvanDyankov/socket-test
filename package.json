@@ -4,22 +4,40 @@
   "description": "Socket I/O playground",
   "main": "server.js",
   "scripts": {
+    "dev": "cross-env NODE_ENV=development webpack --config webpack.config.js --watch --mode development",
     "test": "jest"
   },
   "author": "Ivan Dyankov",
   "license": "ISC",
   "dependencies": {
+    "@material-ui/core": "^3.7.1",
     "connect-ensure-login": "^0.1.1",
     "ejs": "^2.6.1",
     "express": "^4.16.3",
-    "express-flash": "0.0.2",
     "express-session": "^1.15.6",
     "passport": "^0.4.0",
     "passport-auth0": "^1.0.0",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
     "socket.io": "^2.1.1"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/IvanDyankov/socket-test.git"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.3",
+    "babel-jest": "^23.0.0",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "cross-env": "^5.2.0",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2"
   }
 }
