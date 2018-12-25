@@ -4,7 +4,7 @@
   "description": "Socket I/O playground",
   "main": "server.js",
   "scripts": {
-    "build": "webpack --config webpack.config.js --watch --mode production",
+    "build": "webpack --config webpack.config.js --mode production",
     "dev": "webpack --config webpack.config.js --watch --mode development",
     "heroku-postbuild": "npm run build",
     "test": "jest"
