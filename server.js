@@ -52,7 +52,7 @@ passport.deserializeUser(function(user, done) {
 });
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
+// app.use(flash());
 /* routes */
 app.get('/callback',
   passport.authenticate('auth0', { failureRedirect: '/login' }),
@@ -70,18 +70,12 @@ app.get('/logout', (req, res) => {
   req.logout();
 });
 
-// app.get('/', ensureLoggedIn('/login'), function(req, res) {
-//   res.render('index', {
-//     displayName: req.user.displayName
-//   });
-// });
-
-app.get('/', function(req, res) {
+app.get('/', ensureLoggedIn('/login'), function(req, res) {
   res.render('index', {
-    displayName: 'Ivan'
+    displayName: req.user.displayName,
+    picture: req.user.picture,
   });
 });
-
 
 /* socket IO handlers */
 const onlineUsers = {};
@@ -91,10 +85,10 @@ io.on('connection', function(socket) {
     socket.broadcast.emit('echoChatMessage', value);
   });
 
-  socket.on('newClient', function(userName) {
-    onlineUsers[socket.id] = userName;
-    socket.broadcast.emit('addClient', { clientId: socket.id, name: userName });
-    socket.emit('onlineList', JSON.stringify(onlineUsers));
+  socket.on('newClient', (user) => {
+    onlineUsers[socket.id] = user;
+    socket.broadcast.emit('addClient', user);
+    socket.emit('onlineList', onlineUsers);
   });
 
   socket.on('disconnect', function() {

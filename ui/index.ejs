@@ -7,7 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" media="screen" href="/public/css/main.css" />
   <script>
-    var userName = "<%= displayName%>";
+    var user = {
+      displayName: "<%= displayName%>",
+      picture: "<%= picture%>"
+    };
   </script>
 </head>
 <body>
@@ -24,8 +27,8 @@
       </form>
     </div> -->
 
-  <!-- <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
   <script src="/socket.io/socket.io.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
   <script>
     $(function () {
       var socket = io();
