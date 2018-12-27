@@ -4,12 +4,14 @@ import AppContext from './appContext';
 import Layout from './components/Layout';
 
 // TODO:
-// Announce Client joined
-// Annouce Client left
+// Announce Client joined / left
 // SameClient on a new Tab is treated like a new Client
-// Listen for enter Key
+// Listen for 'enter' Key press and send chat message
+// focus on chat message field after message has been sent
 // Only emit 'chatMessage' if text !== ''
 // Add unit tests :)
+// Improve UI styling
+// Make UI responsive (add app bar on top)
 
 class App extends React.Component {
   constructor(props) {
