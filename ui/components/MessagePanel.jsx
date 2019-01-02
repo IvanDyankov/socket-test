@@ -1,5 +1,4 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
@@ -23,13 +22,14 @@ class MessagePanel extends React.Component {
   setMessage = (message) => {
     this.setState({ message });
   }
+
   render() {
     const { classes } = this.props;
     return (
       <AppContext.Consumer>
         {({ sendMessage }) => (
           <Grid container direction="row" className={classes.vertical} spacing={8}>
-            <Grid item xs={10}>
+            <Grid item xs={12}>
               <TextField
                 autoFocus
                 placeholder="Write a Message"
@@ -44,27 +44,18 @@ class MessagePanel extends React.Component {
                   (e) => this.setMessage(e.target.value)
                 }
                 ref={this.messageInput}
+                onKeyPress={(e) => {
+                  const code = e.charCode || e.keyCode;
+                  if(code == 13 && this.state.message !== ''){
+                    sendMessage(this.messageInput.current.props.value)
+                    this.setMessage('');
+                  }
+                }}
               />
-            </Grid>
-            <Grid item xs={2}>
-              <Button
-                color="primary"
-                size='large'
-                fullWidth
-                variant="outlined"
-                onClick={() => {
-                  sendMessage(this.messageInput.current.props.value)
-                  this.setMessage('');
-                }
-                }
-              >
-                Send
-              </Button>
             </Grid>
           </Grid>
         )}
       </AppContext.Consumer>
-
     );
   }
 };

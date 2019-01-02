@@ -15,26 +15,53 @@ const styles = theme => ({
   }
 });
 
-const MainChat = ({ classes }) =>
-  <AppContext.Consumer>
-    {({ messages }) => (
-        <Paper className={classes.mainChat}>
-        {
-          messages.map((message, idx) =>
-            <Typography
-              key={idx}
-              gutterBottom
-              variant="subtitle2"
-              color="textPrimary"
-              align="left"
-              className={classes.textMessage}
-            >
-              {`${message.displayName}: ${message.text}`}
-            </Typography>
-          )
-        }
-        </Paper>
-    )}
-  </AppContext.Consumer>
+class MainChat extends React.Component {
+  constructor() {
+    super();
+    this.bottomOfChat = React.createRef();
+  }
+
+  scrollToBottomOfChat = () => {
+    this.bottomOfChat.current.scrollIntoView({ behavior: "instant" });
+  }
+
+  componentDidMount() {
+    this.scrollToBottomOfChat();
+  }
+
+  componentDidUpdate() {
+    this.scrollToBottomOfChat();
+  }
+
+  render() {
+    const { classes } = this.props;
+    return (
+      <AppContext.Consumer>
+        {({ messages }) => (
+            <Paper className={classes.mainChat}>
+              {
+                messages.map((message, idx) =>
+                  <Typography
+                    key={idx}
+                    gutterBottom
+                    variant="subtitle2"
+                    color="textPrimary"
+                    align="left"
+                    className={classes.textMessage}
+                  >
+                    {`${message.displayName}: ${message.text}`}
+                  </Typography>
+                )
+              }
+              <div style={{ float:"left", clear: "both" }}
+                ref={this.bottomOfChat}>
+              </div>
+            </Paper>
+        )}
+      </AppContext.Consumer>
+    )
+  }
+}
+
 
 export default withStyles(styles)(MainChat);
