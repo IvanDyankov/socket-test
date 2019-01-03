@@ -1,0 +1,20 @@
+{
+  "roots": [
+    "./test/"
+  ],
+  "bail": false,
+  "verbose": true,
+  "testMatch": [
+    "**/?(*.)test.js?(x)"
+  ],
+  "transform": {
+    "^.+\\.(js|jsx)$": "babel-jest"
+  },
+  "setupTestFrameworkScriptFile": "./test/setupJest.js",
+  "snapshotSerializers": [
+    "enzyme-to-json/serializer"
+  ],
+  "coverageReporters": [
+    "html"
+  ]
+}

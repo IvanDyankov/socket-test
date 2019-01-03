@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Layout /> should render correctly with default props 1`] = `
+<Layout
+  classes={
+    Object {
+      "root": "Layout-root-1",
+    }
+  }
+/>
+`;

@@ -56,3 +56,5 @@ class App extends React.Component {
 }
 
 ReactDOM.render(<App />, document.getElementById('main'));
+
+export default App;
