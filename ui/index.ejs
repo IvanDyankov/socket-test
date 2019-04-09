@@ -2,20 +2,20 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Easy Chat</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" type="text/css" media="screen" href="/public/css/main.css" />
   <script>
     var user = {
+      id: "<%= id%>",
       displayName: "<%= displayName%>",
       picture: "<%= picture%>"
     };
   </script>
 </head>
 <body>
-  <div id="main" class="container"> </div>
-  <script src="/socket.io/socket.io.js"></script>
+  <div id="main" class="container"></div>
   <script src="scripts/app.js"></script>
 </body>
 </html>

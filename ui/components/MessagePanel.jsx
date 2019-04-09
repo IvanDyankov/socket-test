@@ -2,13 +2,20 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
-import AppContext from '../appContext';
+import { Mutation } from "react-apollo";
+import gql from 'graphql-tag';
 
 const styles = () => ({
   vertical: {
     alignItems: 'center'
   }
 });
+
+const sendMessageMutation = gql`
+  mutation sendMessage($text: String!, $userId: ID! ) {
+    sendMessage(messageText: $text , userId: $userId)
+  }
+`;
 
 class MessagePanel extends React.Component {
   constructor() {
@@ -24,10 +31,10 @@ class MessagePanel extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, userId } = this.props;
     return (
-      <AppContext.Consumer>
-        {({ sendMessage }) => (
+      <Mutation mutation={sendMessageMutation}>
+        {(sendMessage) => (
           <Grid container direction="row" className={classes.vertical} spacing={8}>
             <Grid item xs={12}>
               <TextField
@@ -46,8 +53,13 @@ class MessagePanel extends React.Component {
                 ref={this.messageInput}
                 onKeyPress={(e) => {
                   const code = e.charCode || e.keyCode;
-                  if(code == 13 && this.state.message !== ''){
-                    sendMessage(this.messageInput.current.props.value)
+                  if (code == 13 && this.state.message !== '') {
+                    sendMessage({
+                      variables: {
+                        text: this.messageInput.current.props.value,
+                        userId
+                      }
+                    })
                     this.setMessage('');
                   }
                 }}
@@ -55,7 +67,7 @@ class MessagePanel extends React.Component {
             </Grid>
           </Grid>
         )}
-      </AppContext.Consumer>
+      </Mutation>
     );
   }
 };

@@ -1,60 +1,75 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import AppContext from './appContext';
+import ApolloClient from 'apollo-client';
+import { ApolloProvider } from 'react-apollo';
+
+import { split } from 'apollo-link';
+import { HttpLink } from 'apollo-link-http';
+import { WebSocketLink } from 'apollo-link-ws';
+import { getMainDefinition } from 'apollo-utilities';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import gql from 'graphql-tag';
+
 import Layout from './components/Layout';
 
-// TODO:
-// Announce Client joined / left
-// SameClient on a new Tab is treated like a new Client
-// Add unit tests :)
-// Improve UI styling
-// Make UI responsive (add app bar on top)
+
+// Create an http link:
+const httpLink = new HttpLink();
+
+// Create a WebSocket link:
+const wsLink = new WebSocketLink({
+  uri: `ws://${location.hostname}${location.port ? `:${location.port}`: ''}/graphql`,
+  options: {
+    reconnect: true
+  }
+});
+
+// using the ability to split links, you can send data to each link
+// depending on what kind of operation is being sent
+const link = split(
+  // split based on operation type
+  ({ query }) => {
+    const { kind, operation } = getMainDefinition(query);
+    return kind === 'OperationDefinition' && operation === 'subscription';
+  },
+  wsLink,
+  httpLink,
+);
+
+const client = new ApolloClient({
+  link,
+  cache: new InMemoryCache()
+});
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-
-    this.socket = io();
-    this.state = {
-      messages: [],
-      onlineUsers: {}
-    };
   }
-
-  componentDidMount() {
-    this.registerClient();
-    this.socket.on('onlineList', data => this.updateOnlineUsers(data));
-    this.socket.on('echoChatMessage', data => this.updateMessages(data))
-  }
-
-  registerClient = () => this.socket.emit('newClient', user);
-
-  sendMessage = (text) =>
-    this.socket.emit('chatMessage', { displayName: user.displayName, text });
-
-  updateOnlineUsers = (newUser) =>
-    this.setState({ onlineUsers: {...this.state.onlineUsers, ...newUser }});
-
-  updateMessages = (newMsg) =>
-    this.setState({ messages: [...this.state.messages, newMsg ]});
 
   render() {
-    const { messages, onlineUsers } = this.state
     return (
-      <AppContext.Provider
-        value={{
-          displayName: user.displayName,
-          sendMessage: this.sendMessage,
-          messages,
-          onlineUsers
-        }}
-      >
-        <Layout />
-      </AppContext.Provider>
+      <ApolloProvider client={client}>
+        <Layout selfDisplayName={user.displayName} selfPicture={user.picture} userId={user.id} />
+      </ApolloProvider>
     )
   }
-}
+};
 
-ReactDOM.render(<App />, document.getElementById('main'));
+const addUserMutation = gql`
+  mutation addUser($id: ID!, $displayName: String!, $picture: String!) {
+    addUser(id: $id, displayName: $displayName, picture: $picture) {
+      id
+    }
+  }
+`;
+
+client.mutate({
+  mutation: addUserMutation,
+  variables: {
+    id: user.id,
+    displayName: user.displayName,
+    picture: user.picture
+  }
+}).then(() => ReactDOM.render(<App />, document.getElementById('main')));
 
 export default App;

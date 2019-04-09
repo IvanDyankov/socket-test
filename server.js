@@ -1,9 +1,16 @@
 const Express = require('express');
-const app = new Express ();
-const http = require('http')
-const server = new http.Server(app);
-const io = require('socket.io')(server);
+const http = require('http');
+const { ApolloServer } = require('apollo-server-express');
 
+const { mockUsers } = require('./gql/typeDefs')
+
+const server = new ApolloServer({
+  typeDefs: require('./gql/typeDefs'),
+  resolvers: require('./gql/resolvers'),
+  subscriptions: { keepAlive: 2000 }
+});
+
+const app = new Express ();
 /* Auth0 */
 const session = require('express-session');
 const Auth0Strategy = require('passport-auth0');
@@ -45,6 +52,12 @@ passport.serializeUser((user, done) => done(null, user))
 passport.deserializeUser((user, done) => done(null, user));
 app.use(passport.initialize());
 app.use(passport.session());
+
+
+const httpServer = http.createServer(app);
+server.applyMiddleware({ app });
+server.installSubscriptionHandlers(httpServer);
+
 /* routes */
 app.get('/callback',
   passport.authenticate('auth0', { failureRedirect: '/login' }),
@@ -54,7 +67,7 @@ app.get('/callback',
   }
 );
 
-app.get('/login', passport.authenticate('auth0', { scope: 'openid profile' }), (req, res) => res.redirect('/'));
+app.get('/login', passport.authenticate('auth0', { scope: 'openid profile' }),(req, res) => res.redirect('/'));
 
 app.get('/logout', (req, res) => {
   req.logout();
@@ -62,33 +75,14 @@ app.get('/logout', (req, res) => {
 
 app.get('/', ensureLoggedIn('/login'), (req, res) =>
   res.render('index', {
+    id: req.user.id,
     displayName: req.user.displayName,
     picture: req.user.picture,
   })
 );
 
-/* socket IO handlers */
-const onlineUsers = {};
-io.on('connection', (socket) => {
-
-  socket.on('chatMessage', (value) => io.emit('echoChatMessage', value));
-
-  socket.on('newClient', (user) => {
-    onlineUsers[socket.id] = user;
-    socket.broadcast.emit('addClient', user);
-    io.emit('onlineList', onlineUsers);
-  });
-
-  socket.on('disconnect', () => {
-    if(onlineUsers[socket.id]) {
-      const clientId = socket.id;
-      const userName = onlineUsers[socket.id];
-      delete onlineUsers[socket.id];
-      socket.broadcast.emit('clientBye', { clientId: clientId, name: userName });
-    }
-  });
-});
-
-server.listen(process.env.PORT || 3000, () => {
-  console.log('listening on *:', process.env.PORT || 3000);
+if (!process.env.PORT) process.env.PORT = 3000;
+httpServer.listen(process.env.PORT, () => {
+  console.log(`🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`)
+  console.log(`🚀 Subscriptions ready at ws://localhost:${process.env.PORT}${server.subscriptionsPath}`)
 });

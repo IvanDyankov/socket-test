@@ -1,8 +1,12 @@
 import React from 'react';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
+import List from '@material-ui/core/List';
 import { withStyles } from '@material-ui/core/styles';
-import AppContext from '../appContext';
+
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
+
+import Message from './Message';
 
 const styles = theme => ({
   mainChat: {
@@ -15,9 +19,38 @@ const styles = theme => ({
   }
 });
 
+const getChatHistoryQuery = gql`
+  {
+    getChatHistory {
+      id
+      text
+      user {
+        displayName
+        picture
+      }
+      timestamp
+    }
+  }
+`;
+
+const chatMessageSentSubscription = gql`
+  subscription {
+    chatMessageSent {
+      id
+      text
+      user {
+        displayName
+        picture
+      }
+      timestamp
+    }
+  }
+`;
+
 class MainChat extends React.Component {
-  constructor() {
-    super();
+
+  constructor(props) {
+    super(props);
     this.bottomOfChat = React.createRef();
   }
 
@@ -25,43 +58,39 @@ class MainChat extends React.Component {
     this.bottomOfChat.current.scrollIntoView({ behavior: "instant" });
   }
 
-  componentDidMount() {
-    this.scrollToBottomOfChat();
-  }
-
-  componentDidUpdate() {
-    this.scrollToBottomOfChat();
-  }
+  onUpdateChat = (prev, { subscriptionData }) => {
+    if (!subscriptionData.data) return prev;
+    const newMessage = subscriptionData.data.chatMessageSent;
+    return Object.assign({}, prev, {
+      getChatHistory: [...prev.getChatHistory, newMessage]
+    });
+  };
 
   render() {
     const { classes } = this.props;
     return (
-      <AppContext.Consumer>
-        {({ messages }) => (
-            <Paper className={classes.mainChat}>
-              {
-                messages.map((message, idx) =>
-                  <Typography
-                    key={idx}
-                    gutterBottom
-                    variant="subtitle2"
-                    color="textPrimary"
-                    align="left"
-                    className={classes.textMessage}
-                  >
-                    {`${message.displayName}: ${message.text}`}
-                  </Typography>
-                )
-              }
-              <div style={{ float:"left", clear: "both" }}
-                ref={this.bottomOfChat}>
-              </div>
-            </Paper>
-        )}
-      </AppContext.Consumer>
+      <Paper className={classes.mainChat}>
+        <Query query={getChatHistoryQuery}
+          onCompleted={() => setTimeout(this.scrollToBottomOfChat, 30)}
+        >
+          {({ loading, error, data: { getChatHistory }, subscribeToMore }) => {
+            if (loading) return "Loading...";
+            if (error) return `Error! ${error.message}`;
+            subscribeToMore({
+              document: chatMessageSentSubscription,
+              updateQuery: this.onUpdateChat
+            });
+            return (
+              <List>
+                { getChatHistory.map( msg => <Message key={msg.id} id={msg.id} user={msg.user} text={msg.text} timestamp={msg.timestamp} />)}
+                <div style={{ clear: "both" }} ref={this.bottomOfChat} />
+              </List>
+            );
+          }}
+        </Query>
+      </Paper>
     )
   }
-}
-
+};
 
 export default withStyles(styles)(MainChat);
