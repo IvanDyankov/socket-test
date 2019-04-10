@@ -63,7 +63,7 @@ class MainChat extends React.Component {
     const newMessage = subscriptionData.data.chatMessageSent;
     // TODO: Use Normalizr for better indexing of data.
     // TOTO: for some reason updateQuery fires multiple times for each subscription https://github.com/apollographql/react-apollo/issues/2656
-    const isNotNewMsg = !!prev.getChatHistory.find(message => message.id === newMessage.id);
+    const isNotNewMsg = prev.getChatHistory.find(message => message.id === newMessage.id);
     return isNotNewMsg ? prev : Object.assign({}, prev, {
       getChatHistory: [...prev.getChatHistory, newMessage]
     });
