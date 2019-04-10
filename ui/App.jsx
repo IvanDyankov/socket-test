@@ -12,6 +12,10 @@ import gql from 'graphql-tag';
 
 import Layout from './components/Layout';
 
+// TODO
+// Add subscirption for new user joined
+// Messages appear multiple times.
+
 
 // Create an http link:
 const httpLink = new HttpLink();

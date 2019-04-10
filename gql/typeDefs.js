@@ -13,6 +13,7 @@ module.exports = gql`
 
   type Subscription {
     chatMessageSent: ChatMessage
+    userAdded: User
   }
 
   type User {

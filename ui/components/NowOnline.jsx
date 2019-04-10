@@ -17,15 +17,36 @@ const getUsersQuery = gql`
   }
 `;
 
-export default ({ selfDisplayName, selfPicture }) =>(
+const getNewUsersSubscription = gql`
+  subscription {
+    userAdded {
+      id
+      displayName
+      picture
+    }
+  }
+`;
+
+export default () =>(
   <Query query={getUsersQuery}>
-    {({ loading, error, data }) => {
+    {({ loading, error, data: { getUsers }, subscribeToMore }) => {
       if (loading) return 'Loading...';
       if (error) return `Error! ${error.message}`;
+      subscribeToMore({
+        document: getNewUsersSubscription,
+        updateQuery: (prev, { subscriptionData }) => {
+          if (!subscriptionData.data) return prev;
+          const newUser = subscriptionData.data.userAdded;
+          return Object.assign({}, prev, {
+            getUsers: [...prev.getUsers, newUser]
+          });
+        }
+
+      });
       return (
         <List>
           {
-            data.getUsers.map(user => (
+            getUsers.map(user => (
               <ListItem button key={user.id}>
                 <Avatar alt="User Avatar" src={user.picture} />
                 <Typography variant="subtitle2" style={{ marginLeft: '10px' }}>

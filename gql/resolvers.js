@@ -4,11 +4,12 @@ const uuid = require('uuid');
 
 const pubsub = new PubSub();
 
+/* TODO: swap for a real data store */
 const mockUsers = [];
-
 const mockMessages = [];
 
 const CHAT_MESSAGE = 'CHAT_MESSAGE';
+const USER_ADDED = 'USER_ADDED';
 
 module.exports = {
   Query: {
@@ -25,6 +26,7 @@ module.exports = {
         picture
       };
       mockUsers.push(user);
+      pubsub.publish(USER_ADDED, { userAdded: user });
       return user;
     },
     sendMessage: (_, { messageText: text, userId }) => {
@@ -43,7 +45,10 @@ module.exports = {
   },
   Subscription: {
     chatMessageSent: {
-      subscribe: () => pubsub.asyncIterator(CHAT_MESSAGE) // don't forget about this mehtod
+      subscribe: () => pubsub.asyncIterator(CHAT_MESSAGE) // don't forget about this method
+    },
+    userAdded: {
+      subscribe: () => pubsub.asyncIterator(USER_ADDED)
     }
   }
 };
