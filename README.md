@@ -26,5 +26,6 @@ To run:
 - build the app: `npm run dev`
 - start the app: `npm start`
 - go to `localhost:3000`
+- GQL endpoint is available at `localhost:3000/graphql`
 
 
