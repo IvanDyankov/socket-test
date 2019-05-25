@@ -28,4 +28,5 @@ To run:
 - go to `localhost:3000`
 - GQL endpoint is available at `localhost:3000/graphql`
 
+TEST
 
